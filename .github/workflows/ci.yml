@@ -1,0 +1,55 @@
+name: MojoPQC-SCA CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-smoke:
+    name: CPU smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python-version: ['3.12']
+    env:
+      MPLCONFIGDIR: ${{ github.workspace }}/.matplotlib
+      PYTHONUTF8: '1'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Check environment
+        run: python scripts/00_check_environment.py
+      - name: Compile Python sources
+        run: python -m compileall -q mojopqc_sca scripts
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Generate small deterministic dataset
+        run: python scripts/01_generate_synthetic_dataset.py --profiling 16 --attack 8 --trace-length 2000
+      - name: Preprocess traces
+        run: python scripts/02_python_preprocess_baseline.py
+      - name: Train CNN smoke checkpoint
+        run: python scripts/04_train_cnn.py --epochs 1 --batch-size 4
+      - name: Train CNN+MPS smoke checkpoint
+        run: python scripts/05_train_cnn_mps.py --epochs 1 --batch-size 4
+      - name: Evaluate guessing entropy
+        run: python scripts/06_evaluate_ge.py --step 1
+      - name: Generate comparison artifacts
+        run: python scripts/07_benchmark_models.py --batch-size 4
+      - name: Benchmark preprocessing
+        run: python scripts/08_benchmark_preprocessing.py
+      - name: Export ONNX and run CPU inference
+        run: |
+          python scripts/09_export_onnx.py
+          python scripts/10_local_inference.py --batch-size 4

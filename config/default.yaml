@@ -1,0 +1,13 @@
+seed: 2026
+dataset:
+  profiling_traces: 10000
+  attack_traces: 2000
+  trace_length: 100000
+  chunk_size: 32
+  classes: 256
+  noise_std: 1.0
+  leakage_amplitude: 0.12
+preprocessing:
+  filter_kernel_size: 11
+  max_shift: 500
+  target_length: 5000

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: "MojoPQC-SCA: Lightweight Deep Learning Side-Channel Analysis for Masked ML-KEM"
+type: software
+abstract: "CPU-first research pipeline for synthetic and hardware-derived masked ML-KEM side-channel traces."
+version: 0.1.0
+date-released: 2026-08-28
+authors:
+  - family-names: Researcher
+    given-names: MojoPQC-SCA
+repository-code: https://github.com/REPLACE_WITH_YOUR_ACCOUNT/MojoPQC-SCA
+license: MIT
