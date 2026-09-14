@@ -1,0 +1,349 @@
+\begin{thebibliography}{58}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+
+\bibitem[Goran Alagic et~al.(2020)]{alagic2020status}
+Goran Alagic et~al. 2020.
+\newblock {Status Report on the Second Round of the NIST Post-Quantum Cryptography Standardization Process}.
+\newblock \emph{National Institute of Standards and Technology}.
+\newblock DOI: \href{https://doi.org/10.6028/NIST.IR.8309}{10.6028/NIST.IR.8309}.
+
+\bibitem[Goran Alagic et~al.(2022)]{alagic2022status}
+Goran Alagic et~al. 2022.
+\newblock {Status Report on the Third Round of the NIST Post-Quantum Cryptography Standardization Process}.
+\newblock \emph{National Institute of Standards and Technology}.
+\newblock DOI: \href{https://doi.org/10.6028/NIST.IR.8413}{10.6028/NIST.IR.8413}.
+
+\bibitem[David Amiet et~al.(2020)]{amiet2020leakage}
+David Amiet et~al. 2020.
+\newblock {Defeating Kyber with Side-Channel Analysis on an ARM Cortex-M4}.
+\newblock \emph{IACR Cryptology ePrint Archive}, 2020, pp. 1389.
+\newblock URL: \url{https://eprint.iacr.org/2020/1389}.
+
+\bibitem[ANSSI(2018)]{ascaddatabase2018}
+{ANSSI} 2018.
+\newblock {ASCAD: The First Open Database for Deep Learning-Based Side-Channel Analysis}.
+\newblock \emph{\url{https://github.com/ANSSI-FR/ascad}}.
+
+\bibitem[Gilles Barthe et~al.(2015)]{barthe2015formal}
+Gilles Barthe et~al. 2015.
+\newblock {Verified Implementations of Masked Cryptography}.
+\newblock \emph{ACM SIGSAC Conference on Computer and Communications Security (CCS)}, pp. 1247--1259.
+\newblock DOI: \href{https://doi.org/10.1145/2810103.2813636}{10.1145/2810103.2813636}.
+
+\bibitem[Ryad Benadjila et~al.(2020)]{benadjila2020deep}
+Ryad Benadjila et~al. 2020.
+\newblock {Deep Learning for Side-Channel Analysis and Introduction to ASCAD Database}.
+\newblock \emph{Journal of Cryptographic Engineering}, 10(2), pp. 163--188.
+\newblock DOI: \href{https://doi.org/10.1007/s13389-019-00220-8}{10.1007/s13389-019-00220-8}.
+
+\bibitem[Joppe Bos et~al.(2018)]{bos2018crystals}
+Joppe Bos et~al. 2018.
+\newblock {CRYSTALS -- Kyber: a CCA-secure module-lattice-based KEM}.
+\newblock \emph{IEEE European Symposium on Security and Privacy (EuroS\&P)}, pp. 353--367.
+\newblock DOI: \href{https://doi.org/10.1109/EuroSP.2018.00032}{10.1109/EuroSP.2018.00032}.
+
+\bibitem[Eric Brier et~al.(2004)]{brier2004correlation}
+Eric Brier et~al. 2004.
+\newblock {Correlation Power Analysis with a Leakage Model}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2004}, 3156, pp. 16--29.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-540-28632-5_2}{10.1007/978-3-540-28632-5_2}.
+
+\bibitem[Olivier Bronchain and Fran\ccois-Xavier Standaert(2020)]{bronchain2020side}
+Olivier Bronchain and Fran{\c{c}}ois-Xavier Standaert 2020.
+\newblock {Side-Channel Security of Masked Implementations: A Comprehensive View}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2020(4), pp. 1--35.
+\newblock DOI: \href{https://doi.org/10.46586/tches.v2020.i4.1-35}{10.46586/tches.v2020.i4.1-35}.
+
+\bibitem[Eleonora Cagli et~al.(2017)]{cagli2017convolutional}
+Eleonora Cagli et~al. 2017.
+\newblock {Convolutional Neural Networks with Data Augmentation Against Jitter-Based Countermeasures}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2017}, 10529, pp. 45--68.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-319-66787-4_3}{10.1007/978-3-319-66787-4_3}.
+
+\bibitem[Suresh Chari et~al.(1999)]{chari1999towards}
+Suresh Chari et~al. 1999.
+\newblock {Towards Sound Approaches to Counteract Power-Analysis Attacks}.
+\newblock \emph{Advances in Cryptology -- CRYPTO '99}, 1666, pp. 398--412.
+\newblock DOI: \href{https://doi.org/10.1007/3-540-48405-1_26}{10.1007/3-540-48405-1_26}.
+
+\bibitem[Andrzej Cichocki et~al.(2016)]{cichocki2016tensor}
+Andrzej Cichocki et~al. 2016.
+\newblock {Tensor Networks for Dimensionality Reduction and Large-Scale Optimization: Part 1 Low-Rank Tensor Decompositions}.
+\newblock \emph{Foundations and Trends in Machine Learning}, 9(4--5), pp. 249--429.
+\newblock DOI: \href{https://doi.org/10.1561/2200000059}{10.1561/2200000059}.
+
+\bibitem[Jean-S\'ebastien Coron et~al.(2014)]{coron2014conversion}
+Jean-S{\'e}bastien Coron et~al. 2014.
+\newblock {Conversion Between Arithmetic and Boolean Masking with Smaller Lookup Tables}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2014}, 8731, pp. 90--107.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-662-44709-3_6}{10.1007/978-3-662-44709-3_6}.
+
+\bibitem[Jan-Pieter D'Anvers et~al.(2022)]{danvers2022side}
+Jan-Pieter D'Anvers et~al. 2022.
+\newblock {Higher-Order Masked Decapsulation of Kyber}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2022(4), pp. 378--407.
+\newblock DOI: \href{https://doi.org/10.46586/tches.v2022.i4.378-407}{10.46586/tches.v2022.i4.378-407}.
+
+\bibitem[L\'eo Ducas et~al.(2018)]{ducas2018crystals}
+L{\'e}o Ducas et~al. 2018.
+\newblock {CRYSTALS-Dilithium: A Lattice-Based Digital Signature Scheme}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2018(1), pp. 238--268.
+\newblock DOI: \href{https://doi.org/10.13154/tches.v2018.i1.238-268}{10.13154/tches.v2018.i1.238-268}.
+
+\bibitem[Tim Fritzmann et~al.(2020)]{fritzmann2020masked}
+Tim Fritzmann et~al. 2020.
+\newblock {Masked Accelerators for Post-Quantum Cryptography: Lattice-Based Cryptography on Embedded Platforms}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2020(3), pp. 164--196.
+\newblock DOI: \href{https://doi.org/10.13154/tches.v2020.i3.164-196}{10.13154/tches.v2020.i3.164-196}.
+
+\bibitem[Amir Gholami et~al.(2022)]{gholami2022survey}
+Amir Gholami et~al. 2022.
+\newblock {A Survey of Quantization Methods for Efficient Neural Network Inference}.
+\newblock \emph{Low-Power Computer Vision}, pp. 291--326.
+\newblock DOI: \href{https://doi.org/10.1201/9781003162810-13}{10.1201/9781003162810-13}.
+
+\bibitem[Miles Glass et~al.(2020)]{glass2020quantum}
+Miles Glass et~al. 2020.
+\newblock {Matrix Product State Architectures for Deep Learning on Edge Devices}.
+\newblock \emph{Physical Review A}, 102(6), pp. 062402.
+\newblock DOI: \href{https://doi.org/10.1103/PhysRevA.102.062402}{10.1103/PhysRevA.102.062402}.
+
+\bibitem[Gilbert Goodwill et~al.(2011)]{goodwill2011tvla}
+Gilbert Goodwill et~al. 2011.
+\newblock {A Testing Methodology for Side-Channel Resistance Validation}.
+\newblock \emph{NIST Non-Invasive Attack Testing Workshop}.
+\newblock URL: \url{https://csrc.nist.gov/csrc/media/events/non-invasive-attack-testing-workshop/documents/08_goodwill.pdf}.
+
+\bibitem[Louis Goubin(2001)]{goubin2001des}
+Louis Goubin 2001.
+\newblock {A Compact Algorithm for Converting Between Boolean and Arithmetic Masking of Practical Interest}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2001}, 2162, pp. 23--36.
+\newblock DOI: \href{https://doi.org/10.1007/3-540-44709-1_4}{10.1007/3-540-44709-1_4}.
+
+\bibitem[Mike Hamburg et~al.(2021)]{hamburg2021chosen}
+Mike Hamburg et~al. 2021.
+\newblock {Chosen-Ciphertext Side-Channel Attacks on Kyber}.
+\newblock \emph{USENIX Security Symposium}, pp. 2493--2510.
+\newblock URL: \url{https://www.usenix.org/conference/usenixsecurity21/presentation/hamburg}.
+
+\bibitem[The HDF Group(2020)]{hdfgroup2020hdf5}
+{The HDF Group} 2020.
+\newblock {Hierarchical Data Format, version 5}.
+\newblock \emph{\url{https://www.hdfgroup.org/HDF5/}}.
+
+\bibitem[William Huggins et~al.(2019)]{huggins2019towards}
+William Huggins et~al. 2019.
+\newblock {Towards Quantum Machine Learning with Tensor Networks}.
+\newblock \emph{Quantum Science and Technology}, 4(2), pp. 024001.
+\newblock DOI: \href{https://doi.org/10.1088/2058-9565/aaea94}{10.1088/2058-9565/aaea94}.
+
+\bibitem[Benoit Jacob et~al.(2018)]{jacob2018quantization}
+Benoit Jacob et~al. 2018.
+\newblock {Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference}.
+\newblock \emph{IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, pp. 2704--2713.
+\newblock DOI: \href{https://doi.org/10.1109/CVPR.2018.00286}{10.1109/CVPR.2018.00286}.
+
+\bibitem[Matthias J. Kannwischer et~al.(2019)]{kannwischer2019pqm4}
+Matthias J. Kannwischer et~al. 2019.
+\newblock {pqm4: Post-quantum crypto library for the ARM Cortex-M4}.
+\newblock \emph{\url{https://github.com/mupq/pqm4}}.
+
+\bibitem[HeeSeok Kim et~al.(2019)]{kim2019make}
+HeeSeok Kim et~al. 2019.
+\newblock {Make Some Noise: Tuning Data Augmentation for Deep Learning Side-Channel Analysis}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2019(3), pp. 209--241.
+\newblock DOI: \href{https://doi.org/10.13154/tches.v2019.i3.209-241}{10.13154/tches.v2019.i3.209-241}.
+
+\bibitem[Paul Kocher et~al.(1999)]{kocher1999differential}
+Paul Kocher et~al. 1999.
+\newblock {Differential Power Analysis}.
+\newblock \emph{Advances in Cryptology -- CRYPTO '99}, 1666, pp. 388--397.
+\newblock DOI: \href{https://doi.org/10.1007/3-540-48405-1_25}{10.1007/3-540-48405-1_25}.
+
+\bibitem[Chris Lattner et~al.(2023)]{lattner2023mojo}
+Chris Lattner et~al. 2023.
+\newblock {Mojo: A Next-Generation Programming Language for High-Performance Heterogeneous Systems and AI}.
+\newblock \emph{Whitepaper, Modular Inc.}.
+\newblock URL: \url{https://www.modular.com/mojo}.
+
+\bibitem[Vadim Lyubashevsky et~al.(2013)]{lyubashevsky2013ideal}
+Vadim Lyubashevsky et~al. 2013.
+\newblock {On Ideal Lattices and Learning with Errors over Rings}.
+\newblock \emph{Journal of the ACM}, 60(6), pp. 43:1--43:35.
+\newblock DOI: \href{https://doi.org/10.1145/2535925}{10.1145/2535925}.
+
+\bibitem[Houssem Maghrebi et~al.(2016)]{maghrebi2016deep}
+Houssem Maghrebi et~al. 2016.
+\newblock {Breaking Cryptographic Implementations Using Deep Learning Techniques}.
+\newblock \emph{Security, Privacy, and Applied Cryptography Engineering (SPACE 2016)}, 10076, pp. 3--26.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-319-49445-6_1}{10.1007/978-3-319-49445-6_1}.
+
+\bibitem[Stefan Mangard et~al.(2007)]{mangard2007power}
+Stefan Mangard et~al. 2007.
+\newblock {Power Analysis Attacks: Revealing the Secrets of Smart Cards}.
+\newblock \emph{Springer Science \& Business Media}.
+\newblock DOI: \href{https://doi.org/10.1007/978-0-387-38162-6}{10.1007/978-0-387-38162-6}.
+
+\bibitem[Lo\"\ic Masure et~al.(2020)]{masure2020comprehensive}
+Lo{\"\i}c Masure et~al. 2020.
+\newblock {A Comprehensive Study of Deep Learning for Side-Channel Analysis}.
+\newblock \emph{IACR Cryptology ePrint Archive}, 2020, pp. 321.
+\newblock URL: \url{https://eprint.iacr.org/2020/321}.
+
+\bibitem[National Institute of Standards and Technology(2024)]{ml_dsa_fips204}
+{National Institute of Standards and Technology} 2024.
+\newblock {FIPS PUB 204: Module-Lattice-Based Digital Signature Standard}.
+\newblock \emph{Federal Information Processing Standards Publication}.
+\newblock DOI: \href{https://doi.org/10.6028/NIST.FIPS.204}{10.6028/NIST.FIPS.204}.
+
+\bibitem[Kien Ngo et~al.(2021)]{ngo2021masked}
+Kien Ngo et~al. 2021.
+\newblock {A Side-Channel Attack on a Masked IND-CCA Secure Kyber Implementation}.
+\newblock \emph{IEEE Access}, 9, pp. 156093--156103.
+\newblock DOI: \href{https://doi.org/10.1109/ACCESS.2021.3129528}{10.1109/ACCESS.2021.3129528}.
+
+\bibitem[National Institute of Standards and Technology(2024)]{nist_fips203}
+{National Institute of Standards and Technology} 2024.
+\newblock {FIPS PUB 203: Module-Lattice-Based Key-Encapsulation Mechanism Standard}.
+\newblock \emph{Federal Information Processing Standards Publication}.
+\newblock DOI: \href{https://doi.org/10.6028/NIST.FIPS.203}{10.6028/NIST.FIPS.203}.
+
+\bibitem[Alexander Novikov et~al.(2015)]{novikov2015tensorizing}
+Alexander Novikov et~al. 2015.
+\newblock {Tensorizing Neural Networks}.
+\newblock \emph{Advances in Neural Information Processing Systems (NeurIPS 2015)}, 28, pp. 442--450.
+\newblock URL: \url{https://proceedings.neurips.cc/paper/2015/hash/6855456e2fe46a9d49d3d3af4f57443d-Abstract.html}.
+
+\bibitem[ONNX Runtime Developers(2021)]{onnxruntime2021}
+{ONNX Runtime Developers} 2021.
+\newblock {ONNX Runtime: Cross-Platform, High Performance ML Inferencing and Training Accelerator}.
+\newblock \emph{\url{https://onnxruntime.ai/}}.
+
+\bibitem[Ivan V. Oseledets(2011)]{oseledets2011tensor}
+Ivan V. Oseledets 2011.
+\newblock {Tensor-Train Decomposition}.
+\newblock \emph{SIAM Journal on Scientific Computing}, 33(5), pp. 2295--2317.
+\newblock DOI: \href{https://doi.org/10.1137/090752286}{10.1137/090752286}.
+
+\bibitem[Adam Paszke et~al.(2019)]{paszke2019pytorch}
+Adam Paszke et~al. 2019.
+\newblock {PyTorch: An Imperative Style, High-Performance Deep Learning Library}.
+\newblock \emph{Advances in Neural Information Processing Systems (NeurIPS 2019)}, 32, pp. 8024--8035.
+\newblock URL: \url{https://proceedings.neurips.cc/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-Abstract.html}.
+
+\bibitem[Chris Peikert(2016)]{peikert2016decade}
+Chris Peikert 2016.
+\newblock {A Decade of Lattice Cryptography}.
+\newblock \emph{Foundations and Trends in Theoretical Computer Science}, 10(4), pp. 283--424.
+\newblock DOI: \href{https://doi.org/10.1561/0400000074}{10.1561/0400000074}.
+
+\bibitem[Guilherme Perin et~al.(2020)]{perin2020neural}
+Guilherme Perin et~al. 2020.
+\newblock {Strength in Numbers: Improving Neural Network Side-Channel Attacks with Ensembles and Synthetic Data}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2020(4), pp. 253--283.
+\newblock DOI: \href{https://doi.org/10.46586/tches.v2020.i4.253-283}{10.46586/tches.v2020.i4.253-283}.
+
+\bibitem[Peter Pessl and Robert Primas(2021)]{pessl2020masked}
+Peter Pessl and Robert Primas 2021.
+\newblock {More Practical Masking of Kyber on ARM Cortex-M4}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2021(1), pp. 148--175.
+\newblock DOI: \href{https://doi.org/10.46586/tches.v2021.i1.148-175}{10.46586/tches.v2021.i1.148-175}.
+
+\bibitem[Stjepan Picek et~al.(2023)]{picek2023deep}
+Stjepan Picek et~al. 2023.
+\newblock {The Need for Speed: Deep Learning Side-Channel Analysis on Embedded Microcontrollers}.
+\newblock \emph{ACM Transactions on Embedded Computing Systems}, 22(4), pp. 65:1--65:28.
+\newblock DOI: \href{https://doi.org/10.1145/3588574}{10.1145/3588574}.
+
+\bibitem[Prasanna Ravi et~al.(2020)]{ravi2020side}
+Prasanna Ravi et~al. 2020.
+\newblock {On Configurable SCA Countermeasures for NTT in Kyber}.
+\newblock \emph{IEEE Transactions on Information Forensics and Security}, 16, pp. 1948--1963.
+\newblock DOI: \href{https://doi.org/10.1109/TIFS.2020.3044815}{10.1109/TIFS.2020.3044815}.
+
+\bibitem[Oded Regev(2005)]{regev2005lattices}
+Oded Regev 2005.
+\newblock {On Lattices, Learning with Errors, Random Linear Codes, and Cryptography}.
+\newblock \emph{ACM Symposium on Theory of Computing (STOC)}, pp. 84--93.
+\newblock DOI: \href{https://doi.org/10.1145/1060590.1060603}{10.1145/1060590.1060603}.
+
+\bibitem[Oscar Reparaz et~al.(2015)]{reparaz2015masked}
+Oscar Reparaz et~al. 2015.
+\newblock {Consistently Masking an Arbitrary Gadget}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2015}, pp. 304--323.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-662-48324-4_15}{10.1007/978-3-662-48324-4_15}.
+
+\bibitem[Pieter Robyns et~al.(2019)]{robyns2019improving}
+Pieter Robyns et~al. 2019.
+\newblock {Improving Side-Channel Analysis Through Deep Learning Architectures}.
+\newblock \emph{IACR Cryptology ePrint Archive}, 2019, pp. 053.
+\newblock URL: \url{https://eprint.iacr.org/2019/053}.
+
+\bibitem[Indranil Roychoudhury et~al.(2020)]{roychoudhury2019accelerating}
+Indranil Roychoudhury et~al. 2020.
+\newblock {Efficient and Side-Channel Protected NTT Implementations for Post-Quantum Cryptography}.
+\newblock \emph{IEEE Transactions on Computers}, 70(8), pp. 1178--1191.
+\newblock DOI: \href{https://doi.org/10.1109/TC.2020.3025227}{10.1109/TC.2020.3025227}.
+
+\bibitem[Werner Schindler et~al.(2005)]{schindler2005stochastic}
+Werner Schindler et~al. 2005.
+\newblock {Improving Divide and Conquer Attacks against AES by Applying Stochastic Methods}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2005}, 3659, pp. 241--256.
+\newblock DOI: \href{https://doi.org/10.1007/11545262_18}{10.1007/11545262_18}.
+
+\bibitem[Tobias Schneider et~al.(2015)]{schneider2015arithmetic}
+Tobias Schneider et~al. 2015.
+\newblock {Efficient Arithmetic-to-Boolean Masking on ARM Architectures}.
+\newblock \emph{Cryptographic Hardware and Embedded Systems -- CHES 2015}, pp. 181--201.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-662-48324-4_9}{10.1007/978-3-662-48324-4_9}.
+
+\bibitem[National Institute of Standards and Technology(2024)]{slh_dsa_fips205}
+{National Institute of Standards and Technology} 2024.
+\newblock {FIPS PUB 205: Stateless Hash-Based Digital Signature Standard}.
+\newblock \emph{Federal Information Processing Standards Publication}.
+\newblock DOI: \href{https://doi.org/10.6028/NIST.FIPS.205}{10.6028/NIST.FIPS.205}.
+
+\bibitem[Fran\ccois-Xavier Standaert et~al.(2009)]{standaert2009unified}
+Fran{\c{c}}ois-Xavier Standaert et~al. 2009.
+\newblock {A Unified Framework for the Analysis of Side-Channel Key Recovery Attacks}.
+\newblock \emph{Advances in Cryptology -- EUROCRYPT 2009}, 5479, pp. 443--461.
+\newblock DOI: \href{https://doi.org/10.1007/978-3-642-01001-9_26}{10.1007/978-3-642-01001-9_26}.
+
+\bibitem[Edwin M. Stoudenmire and David J. Schwab(2016)]{stoudenmire2016supervised}
+Edwin M. Stoudenmire and David J. Schwab 2016.
+\newblock {Supervised Learning with Tensor Networks}.
+\newblock \emph{Advances in Neural Information Processing Systems (NeurIPS 2016)}, 29, pp. 4799--4807.
+\newblock URL: \url{https://proceedings.neurips.cc/paper/2016/hash/5314b9674c86e3f9d1ba25ef9bb32895-Abstract.html}.
+
+\bibitem[Rei Ueno et~al.(2022)]{ueno2022curse}
+Rei Ueno et~al. 2022.
+\newblock {Curse of Dimensionality in Post-Quantum Side-Channel Analysis}.
+\newblock \emph{IEEE International Symposium on Hardware Oriented Security and Trust (HOST)}, pp. 1--6.
+\newblock DOI: \href{https://doi.org/10.1109/HOST54066.2022.9839841}{10.1109/HOST54066.2022.9839841}.
+
+\bibitem[Lennert Wouters et~al.(2020)]{wouters2020revisiting}
+Lennert Wouters et~al. 2020.
+\newblock {Revisiting a Methodology for Deep Learning-Based Side-Channel Analysis}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2020(3), pp. 137--168.
+\newblock DOI: \href{https://doi.org/10.13154/tches.v2020.i3.137-168}{10.13154/tches.v2020.i3.137-168}.
+
+\bibitem[Lichao Wu et~al.(2022)]{wu2022removing}
+Lichao Wu et~al. 2022.
+\newblock {Removing Random Delay Countermeasures from M-LWE Implementations Using Deep Learning}.
+\newblock \emph{IEEE Transactions on Dependable and Secure Computing}, 20(4), pp. 3150--3164.
+\newblock DOI: \href{https://doi.org/10.1109/TDSC.2022.3197607}{10.1109/TDSC.2022.3197607}.
+
+\bibitem[Gabriel Zaid et~al.(2020)]{zaid2020methodology}
+Gabriel Zaid et~al. 2020.
+\newblock {Methodology for Efficient CNN Architectures in Profiling Attacks}.
+\newblock \emph{IACR Transactions on Cryptographic Hardware and Embedded Systems}, 2020(1), pp. 1--36.
+\newblock DOI: \href{https://doi.org/10.13154/tches.v2020.i1.1-36}{10.13154/tches.v2020.i1.1-36}.
+
+\bibitem[Michiel Van Beirendonck et~al.(2022)]{zenodo_kyber_dataset}
+Michiel Van Beirendonck et~al. 2022.
+\newblock {Side-Channel Power and EM Traces of Masked ML-KEM/Kyber on ARM Cortex-M4}.
+\newblock \emph{Zenodo}.
+\newblock DOI: \href{https://doi.org/10.5281/zenodo.6517855}{10.5281/zenodo.6517855}.
+
+\end{thebibliography}
