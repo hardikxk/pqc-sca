@@ -7,6 +7,23 @@ name = "mojopqc-sca"
 version = "0.1.0"
 description = "CPU-first side-channel analysis pipeline for masked ML-KEM traces"
 requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "h5py",
+    "matplotlib",
+    "pandas",
+    "scikit-learn",
+    "torch",
+    "tqdm",
+    "pyyaml",
+    "psutil",
+    "memory-profiler",
+    "onnx",
+    "onnxruntime",
+    "onnxscript",
+]
 
 [tool.setuptools.packages.find]
 include = ["mojopqc_sca*"]
+

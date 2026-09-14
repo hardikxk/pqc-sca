@@ -39,6 +39,8 @@ jobs:
         run: python scripts/01_generate_synthetic_dataset.py --profiling 16 --attack 8 --trace-length 2000
       - name: Preprocess traces
         run: python scripts/02_python_preprocess_baseline.py
+      - name: Validate processed dataset
+        run: python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --output results/benchmarks/dataset_validation.json --strict
       - name: Train CNN smoke checkpoint
         run: python scripts/04_train_cnn.py --epochs 1 --batch-size 4
       - name: Train CNN+MPS smoke checkpoint
@@ -53,3 +55,5 @@ jobs:
         run: |
           python scripts/09_export_onnx.py
           python scripts/10_local_inference.py --batch-size 4
+      - name: Create reproducibility manifest
+        run: python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5

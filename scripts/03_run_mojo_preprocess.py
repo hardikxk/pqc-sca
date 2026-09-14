@@ -8,6 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mojopqc_sca.preprocessing.python_baseline import preprocess_pipeline
+from mojopqc_sca.preprocessing.numba_fallback import preprocess_pipeline_fallback
 from mojopqc_sca.utils.benchmark import save_json
 from mojopqc_sca.utils.config import ensure_output_dirs, load_config
 
@@ -22,10 +23,11 @@ started = time.perf_counter()
 if shutil.which("mojo"):
     print("Mojo detected, but the HDF5 bridge is not enabled yet; using the reference pipeline.")
     backend = "python_reference"
+    stats = preprocess_pipeline(args.input, args.output, config)
 else:
     print("Warning: Mojo is unavailable; using the Python fallback.")
-    backend = "python_fallback"
-stats = preprocess_pipeline(args.input, args.output, config)
+    backend = "numba_fallback"
+    stats = preprocess_pipeline_fallback(args.input, args.output, config)
 stats.update({"backend": backend, "input": args.input, "output": args.output, "execution_time_seconds": time.perf_counter() - started})
 save_json("results/benchmarks/mojo_preprocess.json", stats)
 print(f"Processed with {backend} in {stats['execution_time_seconds']:.3f}s")

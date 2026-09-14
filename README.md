@@ -1,12 +1,12 @@
 # PQC-SCA
 
-PQC-SCA is a lightweight deep-learning side-channel analysis pipeline for masked ML-KEM/Kyber-style traces. It is designed for a CPU-only development machine: preprocessing, evaluation, benchmarking, training, and inference run locally. Larger experiments may be launched from Google Colab, but the current shared training utility explicitly runs on CPU; GPU-specific training support remains future work. An NVIDIA GPU and CUDA are not required.
+PQC-SCA is a lightweight deep-learning side-channel analysis pipeline for masked ML-KEM/Kyber-style traces. It is designed to run locally on a CPU and can also select CUDA automatically when a compatible GPU is available for larger training runs. An NVIDIA GPU and CUDA are not required for the local path.
 
 ## Readiness confirmation
 
 The implemented software path is runnable end-to-end on Windows CPU using the supplied synthetic data. The following have been executed successfully: environment checks, unit tests, synthetic HDF5 generation, streaming preprocessing, CNN and CNN+MPS one-epoch training, GE evaluation, benchmark artifact generation, ONNX export, int8 quantization, and ONNX Runtime CPU inference.
 
-This is a validated software smoke test, not a completed hardware side-channel study. No real ML-KEM oscilloscope traces have been collected in this repository. The test data currently used is synthetic and intentionally tiny: 4 profiling traces and 2 attack traces with 2,000 raw samples each. Therefore the generated accuracy, GE, timing, and memory numbers are factual measurements of that local smoke run, but they are not statistically meaningful publication results and must not be presented as such.
+This is a validated software smoke test, not a completed hardware side-channel study. No real ML-KEM oscilloscope traces have been collected in this repository. The test data is synthetic and intentionally tiny; demo sizes are selected by the command line (the latest local smoke run used 16 profiling traces and 8 attack traces with 2,000 raw samples each). Therefore generated accuracy, GE, timing, and memory numbers are factual measurements of the local smoke configuration, but they are not statistically meaningful publication results and must not be presented as such.
 
 ## Project goals
 
@@ -36,6 +36,8 @@ Chunked normalization -> FIR smoothing -> alignment -> 5,000-sample reduction
 ### Data layer
 
 `mojopqc_sca/datasets/` contains chunked HDF5 generation and loaders. The PyTorch dataset reads one trace at a time, so training does not load the full HDF5 file into RAM.
+
+The external-data adapter can inspect common Zenodo-style `fixed/` and `random/` groups and convert them in chunks. It never invents a sensitive label silently: the caller must explicitly select an input byte with `--label-byte` and record that choice in provenance metadata.
 
 ### Preprocessing layer
 
@@ -74,7 +76,22 @@ scripts/                command-line pipeline stages
 results/                checkpoints, logs, figures, tables, benchmarks
 ```
 
-## Installation and quick demo
+## Quick One-Click Demo (`uv` runtime)
+
+You can run the entire end-to-end pipeline and launch the interactive visual demo dashboard with a single command:
+
+```powershell
+uv run demo.py
+```
+
+This single command automatically resolves dependencies, verifies the environment, generates synthetic NTT traces, runs streaming FIR & alignment preprocessing, validates dataset contracts, trains the CNN and CNN+MPS models, calculates Guessing Entropy (GE), benchmarks model metrics, dynamically quantizes to Int8 ONNX, benchmarks local CPU inference, generates the reproducibility manifest, and starts the live interactive web dashboard at `http://127.0.0.1:8000`.
+
+Options:
+- `uv run demo.py --cli-only` (run full pipeline in terminal without opening browser)
+- `uv run demo.py --full` (train with larger dataset)
+- `uv run demo.py --port 8080` (custom web port)
+
+## Manual Step-by-Step Installation and Demo
 
 From the repository root:
 
@@ -145,7 +162,7 @@ Implemented: ONNX export, int8 dynamic quantization, graph sanitization for the 
 
 ### Phase 10 — Colab and visualization
 
-Implemented: Colab training notebook and results visualization notebook. They are scaffolds for larger experiments and still require a complete dataset/checkpoint run on the target Colab environment; the current training utility remains CPU-only.
+Implemented: Colab training notebook and results visualization notebook. The trainer supports `--device auto|cpu|cuda`, streams HDF5 samples on demand, and records the selected device and peak GPU memory when CUDA is used. The notebooks still require a complete dataset/checkpoint run on the target Colab environment.
 
 ### Phase 11 — Academic packaging
 
@@ -154,6 +171,22 @@ Implemented: unit tests, contribution guidance, citation metadata, paper scaffol
 ### Phase 12 — Research-engineering hardening and CI
 
 Implemented: configuration validation, HDF5 schema validation, chunk-iterator tests, optional Numba normalization acceleration, cross-platform peak-memory monitoring, and GitHub Actions CPU smoke CI on Windows and Ubuntu. CI intentionally uses a small deterministic dataset and does not require CUDA or Mojo.
+
+### Phase 13 — External ML-KEM HDF5 ingestion
+
+Implemented: external HDF5 inspection, discovery of common `fixed/traces`, `random/traces`, `fixed/input(s)`, and `random/input(s)` layouts, chunked conversion into the project contract, explicit input-byte label selection, provenance metadata, and adapter unit tests. This enables the next real-data phase but does not by itself prove that an input byte is the correct sensitive intermediate for an attack.
+
+### Phase 14 — Dataset validation and provenance checks
+
+Implemented: streaming validation of the project HDF5 contract, finite-value checks, label-range checks, optional metadata JSON validation, JSON reporting, explicit source-path overrides for non-standard external files, and unit tests. The validator holds only one batch in memory and can be run before preprocessing or training.
+
+### Phase 15 — Portable training device selection
+
+Implemented: explicit `auto`, `cpu`, and `cuda` training modes, automatic CPU fallback when CUDA is unavailable, pinned host batches for CUDA transfers, and device/peak-GPU-memory metadata in checkpoints and training logs. This preserves the CPU-only local workflow while making the Colab training path use an available GPU.
+
+### Phase 16 — Reproducibility manifests
+
+Implemented: streaming SHA-256 hashing, Git revision/dirty-state capture, environment/package capture, embedded dataset validation, configuration capture, config-versus-dataset consistency checks, selected artifact hashes, and a JSON run-manifest command. This makes a demo or experiment auditable after the terminal session has ended.
 
 ## What the current results mean
 
@@ -170,23 +203,107 @@ Run the same core checks locally:
 ```powershell
 python -m compileall -q mojopqc_sca scripts
 python -m unittest discover -s tests -v
+python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --strict
+```
+
+## External HDF5 conversion
+
+Inspect a downloaded Zenodo-style file without loading trace payloads:
+
+```powershell
+python scripts/11_convert_external_hdf5.py --input path\to\ml-kem-512_masked.h5 --inspect
+```
+
+Convert it to the project layout using an explicitly chosen input byte as the temporary class label:
+
+```powershell
+python scripts/11_convert_external_hdf5.py `
+  --input path\to\ml-kem-512_masked.h5 `
+  --output data/raw/mlkem_converted.h5 `
+  --label-byte 0 `
+  --profiling-limit 1000 `
+  --attack-limit 200
+```
+
+If automatic discovery does not find the source paths, provide all four paths explicitly with `--profiling-traces-path`, `--profiling-inputs-path`, `--attack-traces-path`, and `--attack-inputs-path`. Validate the converted file before preprocessing:
+
+```powershell
+python scripts/12_validate_dataset.py `
+  --input data/raw/mlkem_converted.h5 `
+  --output results/benchmarks/mlkem_converted_validation.json `
+  --strict
+```
+
+The label byte is an experiment decision, not a universal default. Confirm from the implementation and dataset documentation that it corresponds to the sensitive intermediate being modeled. The resulting file can then be passed to preprocessing with `--input data/raw/mlkem_converted.h5`.
+
+## Available Datasets and Training Guide
+
+The repository includes both reproducible synthetic datasets and real ML-KEM-512 side-channel power/EM datasets, properly sorted into `data/raw/`, `data/processed/`, `data/metadata/`, and `data/external/`.
+
+### 1. Dataset Catalog
+
+| Dataset | Raw File (`data/raw/`) | Preprocessed File (`data/processed/`) | Traces & Samples | Description |
+|---|---|---|---|---|
+| **Synthetic PQC Baseline** | `synthetic_pqc.h5` | `python_processed.h5` | 32/8 (demo) up to 10k/2k, L=5,000 | Deterministic NTT leakage generator with Hamming-weight class labels for development and CI smoke tests. |
+| **Real Masked ML-KEM-512** | `ml-kem-512_masked.h5` *(8.45 GB)* & `mlkem_masked_converted.h5` | `mlkem_masked_processed.h5` | 100,000 profiling / 100,000 attack, L=41,800 raw (downsampled to 5,000) | Full Zenodo fixed-vs-random dataset from real masked ML-KEM-512 power acquisition campaigns on ARM Cortex-M4. |
+| **Real Unprotected ML-KEM-512** | `ml-kem-512_unprotected.h5` *(595 MB)* & `mlkem_unprotected_converted.h5` | `mlkem_unprotected_processed.h5` | 10,000 profiling / 10,000 attack, L=28,600 raw (downsampled to 5,000) | Unprotected ML-KEM-512 power traces for leakage comparison and vulnerability baselines. |
+| **Simulation & Confusion Matrices** | `data/external/doi-10.48804-4qbdrp.zip` | Extracted in `data/metadata/confusion_matrices/` | N/A | KU Leuven Kyber case-study reference matrices and belief-propagation simulation artifacts. |
+| **Oscilloscope Chosen-Ciphertext Archive** | `data/external/kyber-sca.zip` *(2.19 GB)* | Documentation in `data/metadata/kyber_sca_readme.txt` | Binary traces & key sheets | Real STM32F4 oscilloscope traces and secret key data sets. |
+
+### 2. How to Train on Any Dataset
+
+You can train on the synthetic baseline, the real masked ML-KEM dataset, or the unprotected dataset using either the one-click runner or step-by-step CLI commands.
+
+#### Option A: One-Click Runner (`uv run demo.py`)
+
+Run the complete pipeline (validation, training, GE evaluation, ONNX dynamic int8 export, and web dashboard) on the selected dataset:
+
+```powershell
+# Train on Real Masked ML-KEM-512 dataset:
+uv run demo.py --dataset masked
+
+# Train on Real Unprotected ML-KEM-512 dataset:
+uv run demo.py --dataset unprotected
+
+# Train on Synthetic Baseline (default):
+uv run demo.py --dataset synthetic
+```
+
+#### Option B: Step-by-Step Modular Training Scripts
+
+To train models individually on a specific preprocessed dataset:
+
+```powershell
+# 1. Train Lightweight 1-D CNN Baseline (e.g. on Masked ML-KEM-512)
+python scripts/04_train_cnn.py `
+  --input data/processed/mlkem_masked_processed.h5 `
+  --epochs 10 `
+  --batch-size 32 `
+  --device auto
+
+# 2. Train CNN + MPS Tensor-Network Classifier
+python scripts/05_train_cnn_mps.py `
+  --input data/processed/mlkem_masked_processed.h5 `
+  --epochs 10 `
+  --batch-size 32 `
+  --bond-dim 8 `
+  --device auto
+
+# 3. Evaluate Guessing Entropy (Key Rank) on Attack Split
+python scripts/06_evaluate_ge.py `
+  --input data/processed/mlkem_masked_processed.h5 `
+  --checkpoint results/models/cnn_mps.pt
+
+# 4. Generate Comparative Model Benchmarks
+python scripts/07_benchmark_models.py `
+  --input data/processed/mlkem_masked_processed.h5
+
+# 5. Export to Dynamic Int8 Quantized ONNX & Run Local CPU Inference
+python scripts/09_export_onnx.py
+python scripts/10_local_inference.py --input data/processed/mlkem_masked_processed.h5
 ```
 
 ## Test data
-
-The default input is `data/raw/synthetic_pqc.h5`. External data placed at that exact path is picked up automatically. It must contain:
-
-```text
-/traces/profiling    float32, shape (N, L)
-/labels/profiling    uint8, shape (N,)
-/traces/attack       float32, shape (M, L)
-/labels/attack       uint8, shape (M,)
-/metadata/config     optional JSON string
-```
-
-Use `--input` and `--output` to work with another filename without replacing the default test data.
-
-## Finding real ML-KEM/Kyber testing data
 
 The repository’s included data is synthetic. It is suitable for validating software, but it is not evidence from a physical ML-KEM implementation. For a real-trace study, look for power or EM traces captured from a specific implementation, together with the labels and acquisition metadata needed to define a profiling split and an attack split.
 
@@ -241,11 +358,20 @@ Save the converted file as `data/raw/synthetic_pqc.h5` to have the default comma
 
 For a serious result, use separate profiling and attack traces, multiple attack repetitions or fixed-key attack campaigns, and a held-out key/device condition where appropriate. Preserve the source license and cite the dataset paper or repository.
 
+Before preprocessing or training, run the bounded-memory validator. It checks the project schema, scans for non-finite trace values, reports label coverage, and records whether optional provenance JSON is valid:
+
+```powershell
+python scripts/12_validate_dataset.py --input data/raw/synthetic_pqc.h5 --output results/benchmarks/dataset_validation.json --strict
+python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5
+```
+
+The manifest also reports whether the dataset dimensions match the YAML declarations. If you generated a deliberately small smoke dataset with command-line overrides, those count checks are expected to be false; use a matching configuration file for publication experiments.
+
 ## Current status
 
-Implemented: environment check, synthetic HDF5 generation, streaming preprocessing, optional Mojo dispatch/fallback, data loaders, CNN, CNN+MPS, training scripts, and guessing-entropy evaluation.
+Implemented: environment check, synthetic HDF5 generation, streaming preprocessing, optional Mojo dispatch/fallback, data loaders, CNN, CNN+MPS, training scripts, guessing-entropy evaluation, external ML-KEM HDF5 conversion, and streaming dataset validation.
 
-Implemented in this development slice: model comparison, preprocessing comparison, ONNX export/local inference entry points, unit tests, Colab notebooks, visualization notebook, paper scaffold, citation metadata, and contribution guidance.
+Implemented in this development slice: model comparison, preprocessing comparison, ONNX export/local inference entry points, unit tests, Colab notebooks, visualization notebook, paper scaffold, citation metadata, contribution guidance, external-data validation, and portable training-device selection.
 
 Still planned: native SIMD Mojo implementations and a validated hardware-trace study. The ONNX and benchmark stages require their optional runtime dependencies and trained checkpoints.
 
@@ -266,7 +392,10 @@ Never compare synthetic and hardware traces as if they were interchangeable expe
 
 ## Research artifacts
 
-- `tests/`: deterministic unit tests for preprocessing and GE calculations.
+- `tests/`: deterministic unit tests for preprocessing, GE calculations, HDF5 conversion, and validation.
+- `mojopqc_sca/datasets/validation.py`: streaming schema and quality reporting.
+- `scripts/12_validate_dataset.py`: command-line dataset validation report.
+- `scripts/13_create_run_manifest.py`: reproducibility manifest with hashes and environment metadata.
 - `notebooks/colab_train.ipynb`: cloud-oriented training workflow.
 - `notebooks/results_visualization.ipynb`: inspection of JSON/CSV/PNG outputs.
 - `paper/main.tex`: manuscript scaffold with explicit limitations.

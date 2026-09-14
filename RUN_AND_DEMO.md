@@ -17,12 +17,25 @@ The current implementation includes the CPU-first foundation:
 5. HDF5 and memory-mapped data-access helpers.
 6. Lightweight CNN and CNN+MPS model definitions.
 7. CPU-safe training scripts and guessing-entropy evaluation.
+8. External HDF5 inspection and chunked conversion for common fixed/random ML-KEM datasets.
+9. Streaming dataset validation and JSON quality reports.
+10. Reproducibility manifests containing hashes, environment, Git state, validation results, and config consistency checks.
 
-Native Mojo acceleration remains planned work. Model/preprocessing comparison, ONNX entry points, tests, notebooks, and the paper scaffold are now present.
+Native Mojo acceleration remains planned work. Model/preprocessing comparison, ONNX entry points, tests, notebooks, GPU-capable training selection, and the paper scaffold are now present.
 
 GitHub Actions runs the same CPU smoke path on Windows and Ubuntu through `.github/workflows/ci.yml`. The workflow does not require CUDA, an NVIDIA GPU, or Mojo.
 
-## 2. Install dependencies
+## 2. One-Command Full Demo (`uv run`)
+
+Run the complete pipeline and launch the interactive visual dashboard in one single command using `uv`:
+
+```powershell
+uv run demo.py
+```
+
+This runs all stages end-to-end and starts the interactive dark-mode dashboard at `http://127.0.0.1:8000`.
+
+## 3. Install dependencies (Manual)
 
 Use Python 3.10 or newer. From PowerShell:
 
@@ -158,6 +171,8 @@ python scripts/04_train_cnn.py --epochs 1 --batch-size 8
 python scripts/05_train_cnn_mps.py --epochs 1 --batch-size 8
 ```
 
+The training scripts accept `--device auto|cpu|cuda`. `auto` selects CUDA when available and safely selects CPU otherwise; on this Windows machine, use `--device cpu` or leave the default `auto`.
+
 The normal research configuration is 30 epochs and batch size 128:
 
 ```powershell
@@ -210,7 +225,12 @@ After training CNN+MPS:
 ```powershell
 python scripts/09_export_onnx.py
 python scripts/10_local_inference.py
+python scripts/11_convert_external_hdf5.py --input path\to\ml-kem-512_masked.h5 --inspect
+python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --strict
+python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5
 ```
+
+The manifest records whether the dataset dimensions match the YAML configuration. For the deliberately small smoke run, count mismatches are expected because `--profiling`, `--attack`, and `--trace-length` override the default configuration; use a matching YAML file for formal experiments.
 
 The export creates `results/models/cnn_mps.onnx` and `results/models/cnn_mps_int8.onnx`. Inference creates `results/benchmarks/local_inference.json` and prints milliseconds per trace and GE. ONNX Runtime is required for these commands.
 
@@ -225,6 +245,8 @@ The scripts create output directories automatically.
 | Mojo/fallback-processed HDF5 | `data/processed/mojo_processed.h5` |
 | Python preprocessing benchmark | `results/benchmarks/python_preprocess.json` |
 | Mojo/fallback benchmark | `results/benchmarks/mojo_preprocess.json` |
+| Dataset validation report | `results/benchmarks/dataset_validation.json` |
+| Reproducibility manifest | `results/benchmarks/run_manifest.json` |
 | Metadata | `data/metadata/` |
 | Future model checkpoints | `results/models/` |
 | Future figures | `results/figures/` |
@@ -274,9 +296,11 @@ python scripts/07_benchmark_models.py
 python scripts/08_benchmark_preprocessing.py
 python scripts/09_export_onnx.py
 python scripts/10_local_inference.py
+python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --strict
+python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5
 ```
 
-Training is intended for Google Colab when a local GPU is unavailable. Local execution should remain focused on generation, preprocessing, evaluation, benchmarking, and CPU inference.
+Training defaults to `--device auto`, selecting CUDA when available and CPU otherwise. Use Google Colab for larger training runs when local CPU execution is too slow; evaluation, benchmarking, and ONNX inference remain CPU-compatible.
 
 ## 14. Local validation
 

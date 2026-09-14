@@ -22,6 +22,8 @@ Masked post-quantum implementations such as ML-KEM need practical side-channel e
 6. JSON, CSV, LaTeX, and PNG experiment artifacts.
 7. ONNX, int8, and CPU inference support.
 8. Unit tests and GitHub Actions CPU smoke CI on Windows and Ubuntu.
+9. External HDF5 inspection/conversion and bounded-memory dataset validation reports.
+10. Reproducibility manifests with configuration, environment, Git state, and artifact hashes.
 
 ## Architecture explanation
 
@@ -52,6 +54,8 @@ python scripts/00_check_environment.py
 python -m unittest discover -s tests -v
 python scripts/01_generate_synthetic_dataset.py --profiling 16 --attack 8 --trace-length 2000
 python scripts/02_python_preprocess_baseline.py
+python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --strict
+python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5
 python scripts/04_train_cnn.py --epochs 1 --batch-size 4
 python scripts/05_train_cnn_mps.py --epochs 1 --batch-size 4
 python scripts/06_evaluate_ge.py --step 1
@@ -59,7 +63,7 @@ python scripts/09_export_onnx.py
 python scripts/10_local_inference.py --batch-size 4
 ```
 
-Show the generated files in `results/`: model checkpoints, GE curve, benchmark tables, ONNX models, and inference JSON.
+Show the generated files in `results/`: the dataset validation report, model checkpoints, GE curve, benchmark tables, ONNX models, and inference JSON.
 
 ## Honest status statement
 
@@ -80,15 +84,15 @@ Say this explicitly:
 
 - Synthetic traces are not a substitute for a physical acquisition campaign.
 - The current native Mojo kernels are placeholders; measured preprocessing speedups are not Mojo speedups.
-- The current training utility is CPU-only.
+- Training defaults safely to CPU and supports explicit `auto`, `cpu`, or `cuda` selection for Colab/GPU runs.
 - The tiny demo dataset is too small for meaningful accuracy or guessing-entropy conclusions.
-- External ML-KEM datasets require format conversion and sensitive-label definition.
+- External ML-KEM datasets require format conversion, validation, a reproducibility manifest, and a defensible sensitive-label definition.
 
 ## Likely review questions
 
 ### Why no CUDA?
 
-The design target is a CPU-only development and inference environment. Training is intentionally lightweight, and larger experiments can be moved to a cloud notebook later. CUDA is an optimization, not a correctness requirement.
+The design target is a CPU-first development and inference environment. Training is intentionally lightweight, defaults to automatic device selection, and can use CUDA in Colab or another compatible environment. CUDA is an optimization, not a correctness requirement.
 
 ### Why use an MPS layer?
 

@@ -1,3 +1,6 @@
+demo:
+	uv run demo.py
+
 setup:
 	python -m pip install -r requirements.txt
 
@@ -33,3 +36,13 @@ export:
 
 infer:
 	python scripts/10_local_inference.py
+
+validate:
+	python -m compileall -q mojopqc_sca scripts
+	python -m unittest discover -s tests -v
+
+validate-data:
+	python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --output results/benchmarks/dataset_validation.json --strict
+
+manifest:
+	python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5

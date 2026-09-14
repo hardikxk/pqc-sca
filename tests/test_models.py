@@ -13,3 +13,11 @@ class ModelTests(unittest.TestCase):
             self.assertLess(count_parameters(model), 200_000)
             with torch.no_grad():
                 self.assertEqual(model(torch.randn(2, 1, 5000)).shape, (2, 256))
+
+    def test_training_device_auto_is_safe_without_cuda(self):
+        from scripts._train_common import resolve_device
+
+        self.assertEqual(resolve_device("cpu").type, "cpu")
+        self.assertIn(resolve_device("auto").type, {"cpu", "cuda"})
+        with self.assertRaises(ValueError):
+            resolve_device("tpu")

@@ -1,0 +1,14 @@
+numpy
+scipy
+h5py
+matplotlib
+pandas
+scikit-learn
+torch
+tqdm
+pyyaml
+psutil
+memory-profiler
+onnx
+onnxruntime
+onnxscript

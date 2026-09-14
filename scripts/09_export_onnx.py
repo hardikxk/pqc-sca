@@ -24,7 +24,16 @@ model = CNNWithMPS(checkpoint["input_len"], checkpoint["num_classes"], checkpoin
 model.load_state_dict(checkpoint["model_state"]); model.eval()
 Path(args.onnx).parent.mkdir(parents=True, exist_ok=True)
 example = torch.randn(1, 1, checkpoint["input_len"])
-torch.onnx.export(model, example, args.onnx, input_names=["trace"], output_names=["logits"], dynamic_axes={"trace": {0: "batch"}, "logits": {0: "batch"}}, opset_version=18)
+import logging
+import warnings
+logging.getLogger("torch.onnx").setLevel(logging.ERROR)
+logging.getLogger("root").setLevel(logging.ERROR)
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore")
+    try:
+        torch.onnx.export(model, example, args.onnx, input_names=["trace"], output_names=["logits"], dynamic_axes={"trace": {0: "batch"}, "logits": {0: "batch"}}, opset_version=17)
+    except Exception:
+        torch.onnx.export(model, example, args.onnx, input_names=["trace"], output_names=["logits"], opset_version=17)
 with tempfile.TemporaryDirectory(prefix="mojopqc_onnx_") as temporary:
     # ONNX Runtime's quantizer currently rejects some exporter-provided
     # intermediate value_info shapes around the MPS reshape/einsum graph.
@@ -34,6 +43,8 @@ with tempfile.TemporaryDirectory(prefix="mojopqc_onnx_") as temporary:
     del model_proto.graph.value_info[:]
     sanitized = str(Path(temporary) / "model.onnx")
     onnx.save(model_proto, sanitized)
-    quantize_dynamic(sanitized, args.int8_onnx, weight_type=QuantType.QInt8)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        quantize_dynamic(sanitized, args.int8_onnx, weight_type=QuantType.QInt8)
 print(f"Wrote {args.onnx}")
 print(f"Wrote {args.int8_onnx}")

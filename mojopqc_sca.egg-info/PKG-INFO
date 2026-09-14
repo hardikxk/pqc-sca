@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: mojopqc-sca
+Version: 0.1.0
+Summary: CPU-first side-channel analysis pipeline for masked ML-KEM traces
+Requires-Python: >=3.10
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: h5py
+Requires-Dist: matplotlib
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: torch
+Requires-Dist: tqdm
+Requires-Dist: pyyaml
+Requires-Dist: psutil
+Requires-Dist: memory-profiler
+Requires-Dist: onnx
+Requires-Dist: onnxruntime
+Requires-Dist: onnxscript

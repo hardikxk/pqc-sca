@@ -4,6 +4,7 @@ __pycache__/
 venv/
 .pytest_cache/
 .rumdl_cache/
+data/
 data/raw/*
 data/processed/*
 data/metadata/*

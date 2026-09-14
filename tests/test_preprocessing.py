@@ -30,6 +30,19 @@ class PreprocessingTests(unittest.TestCase):
                 self.assertEqual(dataset["traces/profiling"].shape, (3, 20))
                 self.assertEqual(dataset["traces/attack"].shape, (2, 20))
 
+    def test_fallback_pipeline_preserves_project_contract(self):
+        from mojopqc_sca.preprocessing.numba_fallback import preprocess_pipeline_fallback
+
+        config = {"seed": 3, "dataset": {"profiling_traces": 3, "attack_traces": 2, "trace_length": 32, "chunk_size": 2, "classes": 4, "noise_std": 1.0, "leakage_amplitude": 0.1}, "preprocessing": {"filter_kernel_size": 3, "max_shift": 2, "target_length": 8}}
+        with tempfile.TemporaryDirectory() as directory:
+            raw = Path(directory) / "raw.h5"; processed = Path(directory) / "fallback.h5"
+            generate_dataset(raw, config)
+            result = preprocess_pipeline_fallback(raw, processed, config)
+            self.assertIn(result["backend"], {"numba", "numpy_scipy"})
+            self.assertGreater(result["peak_memory_bytes"], 0)
+            layout = validate_hdf5_layout(processed)
+            self.assertEqual(layout["traces/profiling"], (3, 8))
+
     def test_hdf5_contract_and_chunk_iterator(self):
         config = {"seed": 2, "dataset": {"profiling_traces": 5, "attack_traces": 2, "trace_length": 30, "chunk_size": 2, "classes": 4, "noise_std": 1.0, "leakage_amplitude": 0.1}, "preprocessing": {"filter_kernel_size": 3, "max_shift": 2, "target_length": 10}}
         with tempfile.TemporaryDirectory() as directory:
