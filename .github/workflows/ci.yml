@@ -1,20 +1,23 @@
-name: MojoPQC-SCA CI
+name: NeuralSCA / MojoPQC-SCA CI
 
 on:
   push:
+    branches: [master, main]
   pull_request:
+    branches: [master, main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   cpu-smoke:
-    name: CPU smoke (${{ matrix.os }})
+    name: CPU Smoke & Pipeline (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: ['3.12']
     env:
       MPLCONFIGDIR: ${{ github.workspace }}/.matplotlib
@@ -22,38 +25,83 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
-      - name: Check environment
+
+      - name: Check environment and hardware capabilities
         run: python scripts/00_check_environment.py
+
       - name: Compile Python sources
         run: python -m compileall -q mojopqc_sca scripts
-      - name: Run unit tests
+
+      - name: Run deterministic unit tests
         run: python -m unittest discover -s tests -v
-      - name: Generate small deterministic dataset
+
+      - name: Verify research paper integrity (LaTeX syntax & citations)
+        run: |
+          python -c "
+          import re
+          with open('paper/main.tex', 'r', encoding='utf-8') as f:
+              tex = f.read()
+          assert tex.count('{') == tex.count('}'), 'Unbalanced braces in paper/main.tex'
+          cites = set(re.findall(r'\\cite\{([^}]+)\}', tex))
+          all_cites = set(k.strip() for c in cites for k in c.split(','))
+          bibitems = set(re.findall(r'\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}', tex))
+          missing = all_cites - bibitems
+          assert not missing, f'Missing bibitems in main.tex: {missing}'
+          print(f'Research paper verified successfully: {len(all_cites)} citations checked.')
+          "
+
+      - name: Generate deterministic synthetic dataset
         run: python scripts/01_generate_synthetic_dataset.py --profiling 16 --attack 8 --trace-length 2000
-      - name: Preprocess traces
+
+      - name: Run streaming preprocessing baseline (FIR, alignment, POI)
         run: python scripts/02_python_preprocess_baseline.py
-      - name: Validate processed dataset
+
+      - name: Validate processed dataset contract & non-finite checks
         run: python scripts/12_validate_dataset.py --input data/processed/python_processed.h5 --output results/benchmarks/dataset_validation.json --strict
-      - name: Train CNN smoke checkpoint
+
+      - name: Train 1D-CNN baseline smoke checkpoint
         run: python scripts/04_train_cnn.py --epochs 1 --batch-size 4
-      - name: Train CNN+MPS smoke checkpoint
+
+      - name: Train CNN+MPS quantum-inspired smoke checkpoint
         run: python scripts/05_train_cnn_mps.py --epochs 1 --batch-size 4
-      - name: Evaluate guessing entropy
+
+      - name: Evaluate guessing entropy (GE key rank)
         run: python scripts/06_evaluate_ge.py --step 1
-      - name: Generate comparison artifacts
+
+      - name: Generate model complexity comparison artifacts
         run: python scripts/07_benchmark_models.py --batch-size 4
-      - name: Benchmark preprocessing
+
+      - name: Benchmark preprocessing throughput and memory
         run: python scripts/08_benchmark_preprocessing.py
-      - name: Export ONNX and run CPU inference
+
+      - name: Export dynamic Int8 ONNX and benchmark CPU inference
         run: |
           python scripts/09_export_onnx.py
           python scripts/10_local_inference.py --batch-size 4
-      - name: Create reproducibility manifest
+
+      - name: Create cryptographic SHA-256 reproducibility manifest
         run: python scripts/13_create_run_manifest.py --dataset data/processed/python_processed.h5
+
+      - name: Test unified runner CLI mode
+        run: python demo.py --cli-only --skip-pipeline
+
+      - name: Upload benchmark & evaluation artifacts (Ubuntu)
+        if: matrix.os == 'ubuntu-latest' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: neural-sca-benchmark-artifacts
+          path: |
+            results/benchmarks/
+            results/models/*.onnx
+            results/figures/
+            results/tables/
+          if-no-files-found: ignore
