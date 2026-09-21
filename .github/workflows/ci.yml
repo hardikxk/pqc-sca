@@ -59,6 +59,9 @@ jobs:
           print(f'Research paper verified successfully: {len(all_cites)} citations checked.')
           "
 
+      - name: Validate Jupyter notebooks structure
+        run: python -m unittest tests/test_notebooks.py -v
+
       - name: Generate deterministic synthetic dataset
         run: python scripts/01_generate_synthetic_dataset.py --profiling 16 --attack 8 --trace-length 2000
 

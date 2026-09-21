@@ -5,6 +5,7 @@
 [![ONNX Runtime](https://img.shields.io/badge/ONNX_Runtime-1.19+-005CED.svg)](https://onnxruntime.ai/)
 [![NIST Standard](https://img.shields.io/badge/NIST_PQC-FIPS_203_(ML--KEM)-darkgreen.svg)](https://csrc.nist.gov/pubs/fips/203/final)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hardikxk/pqc-sca/blob/main/notebooks/colab_train.ipynb)
 
 > **MojoPQC-SCA (NeuralSCA)** is a lightweight, end-to-end deep learning side-channel analysis (DL-SCA) profiling pipeline engineered to evaluate the physical hardware security of **NIST FIPS 203 (ML-KEM / CRYSTALS-Kyber)** on embedded microcontrollers.
 > 
@@ -18,6 +19,7 @@
 - [Key Features & Architecture](#key-features--architecture)
 - [Empirical Results & Benchmark Highlights](#empirical-results--benchmark-highlights)
 - [Comparison with Existing Alternatives](#comparison-with-existing-alternatives)
+- [Interactive Google Colab & Jupyter Notebooks](#interactive-google-colab--jupyter-notebooks)
 - [Interactive Developer Console & Web Testbed](#interactive-developer-console--web-testbed)
 - [Quick Start (One-Click Demo)](#quick-start-one-click-demo)
 - [Step-by-Step Modular Pipeline](#step-by-step-modular-pipeline)
@@ -131,6 +133,23 @@ The table below summarizes how **MojoPQC-SCA** compares against the prevailing s
 2. **Anti-Overfitting Low-Rank Regularization:** Unlike massive ResNet/VGG models ($>1.2\text{M}$ params) or dense heads ($>420\text{k}$ params) that memorize oscilloscope noise, the MPS tensor network ($\chi = 8$) strictly bounds virtual entanglement entropy, filtering uncorrelated noise while extracting multi-share leakage.
 3. **Automated Feature Extraction:** Overcomes the $\mathcal{O}(L^2)$ combinatorial bottleneck of 2nd-order CPA by extracting shift-invariant features via 1D-CNN convolutions.
 4. **Edge Deployment Without GPUs:** Dynamic Int8 ONNX quantization runs at $0.14\text{ ms per trace}$ ($>7,100\text{ traces/s}$) on standard consumer laptop CPUs.
+
+---
+
+## Interactive Google Colab & Jupyter Notebooks
+
+For users who prefer cloud GPU execution or wish to experiment without a local environment, three fully self-contained Jupyter notebooks are provided in [`notebooks/`](notebooks/):
+
+| Notebook | Open in Colab | Target Hardware | Estimated Runtime | Primary Workflow |
+|---|:---:|:---:|:---:|---|
+| **End-to-End Colab Training**<br>[`colab_train.ipynb`](notebooks/colab_train.ipynb) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hardikxk/pqc-sca/blob/main/notebooks/colab_train.ipynb) | **T4 GPU** / CPU | ~10–15 min | Full pipeline: synthetic trace generation, bounded streaming preprocessing, baseline 1D-CNN vs. CNN+MPS tensor network training, Guessing Entropy convergence, and Int8 ONNX export. |
+| **Quick 5-Minute Demo**<br>[`quick_demo.ipynb`](notebooks/quick_demo.ipynb) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hardikxk/pqc-sca/blob/main/notebooks/quick_demo.ipynb) | Free CPU / GPU | ~5 min | Fast, compact iteration over 2,000 traces. Verifies streaming dataflow, model architectures, and parameter budget compliance ($<200\text{k}$). |
+| **Results Visualization & Analysis**<br>[`results_visualization.ipynb`](notebooks/results_visualization.ipynb) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hardikxk/pqc-sca/blob/main/notebooks/results_visualization.ipynb) | Free CPU | <2 min | Publication-ready visual analytics: multi-stage oscilloscope waveforms, digital filtering comparisons, Guessing Entropy curves, and parameter footprint radar charts. |
+
+### Running on Google Colab:
+1. Click the **Open In Colab** badge for any of the notebooks above.
+2. In Google Colab, select **Runtime → Change runtime type → T4 GPU** (or keep the default CPU runtime for `quick_demo.ipynb` / `results_visualization.ipynb`).
+3. Run **Runtime → Run all** (or step through cell-by-cell). The notebooks clone the repository, install dependencies, and run seamlessly without requiring manual configuration.
 
 ---
 
@@ -289,6 +308,10 @@ NeuralSCA/
 │   ├── preprocessing/          # Zero-phase FIR filtering, template alignment, POI decimation
 │   └── evaluation/             # Cumulative log-likelihood, Guessing Entropy & rank metrics
 ├── scripts/                    # Numbered standalone pipeline execution scripts (00 to 13)
+├── notebooks/                  # Interactive Google Colab & Jupyter notebooks
+│   ├── colab_train.ipynb       # End-to-end GPU training pipeline on Colab
+│   ├── quick_demo.ipynb        # Fast 5-minute CPU/GPU walkthrough
+│   └── results_visualization.ipynb # Publication figures & metric plots
 ├── results/
 │   ├── models/                 # Trained checkpoints (.pt) and Int8 ONNX graphs (.onnx)
 │   ├── benchmarks/             # Throughput, memory, latency, and run_manifest.json
