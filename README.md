@@ -48,6 +48,9 @@ While algorithmic **Boolean masking** ($x = x_1 \oplus x_2$) splits secrets into
 
 ## System Architecture
 
+![MojoPQC-SCA Architecture & Component Animation](results/figures/architecture_pipeline_animated.gif)
+*Figure: End-to-end animated dataflow showing bounded-memory streaming ingestion ($<112\text{ MB}$), zero-phase FIR filtering, quantum-inspired MPS tensor contraction ($\chi=8, 9,226\text{ params}$), and Guessing Entropy convergence to Rank 1.0. High-res video: [`architecture_pipeline_animated.mp4`](results/figures/architecture_pipeline_animated.mp4).*
+
 ```text
 +-----------------------------------------------------------------------------------------+
 |                               MojoPQC-SCA Core Dataflow                                 |
@@ -278,18 +281,23 @@ Every execution of the pipeline automatically records an immutable, verifiable m
 
 ---
 
-## Research Paper & Explanation Guide
+## Research Paper & Explanation Guides
 
-This project includes a complete academic manuscript ready for submission to top-tier security and AI venues (AAAI / CHES / IEEE S&P):
+This project includes a complete academic manuscript ready for submission to top-tier security and AI venues (AAAI / CHES / IEEE S&P) along with comprehensive presentation and demonstration guides:
 
 - **Research Manuscript:** [`paper/main.tex`](paper/main.tex)
   - Standard AAAI 2-column format with unnumbered subheadings (`secnumdepth = 1`).
   - 58 embedded academic citations with clickable DOIs and URLs in [`paper/references.bib`](paper/references.bib) and [`paper/main.bbl`](paper/main.bbl).
   - Formal pseudocode in **Algorithm 1**, complete architectural specs in **Table 1–5**, and comprehensive comparative benchmarks in **Table 6**.
+- **Demo & Explanation Playbook:** [`DEMO_AND_EXPLANATION_GUIDE.md`](DEMO_AND_EXPLANATION_GUIDE.md)
+  - Step-by-step local web demo script (tab-by-tab walkthrough of all 6 console views).
+  - Google Colab demonstration workflow with GPU acceleration.
+  - Plain-English analogies (stethoscope on the safe) and section-by-section research paper walkthrough.
+  - High-stakes examiner Q&A answers.
 - **Explainer & Presentation Script:** [`EXPLAINER_AND_PRESENTATION_GUIDE.md`](EXPLAINER_AND_PRESENTATION_GUIDE.md)
   - Plain-English breakdown of all project concepts.
   - 60-second elevator pitch and 5-minute technical defense walkthrough script.
-  - Key statistics reference table and prepared answers for examiner/reviewer questions.
+  - Key statistics reference table.
 
 ---
 
@@ -318,6 +326,7 @@ NeuralSCA/
 │   └── figures/                # Waveforms, parameter comparisons, and GE convergence plots
 ├── paper/                      # AAAI LaTeX research paper, references.bib & main.bbl
 ├── demo.py                     # Unified runner and interactive developer console web testbed
+├── DEMO_AND_EXPLANATION_GUIDE.md # Live demo scripts, Colab guide & concept explanation
 ├── EXPLAINER_AND_PRESENTATION_GUIDE.md # Complete project explanation & defense script
 ├── pyproject.toml              # Modern Python packaging configuration
 └── requirements.txt            # Declared dependencies

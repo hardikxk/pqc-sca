@@ -18,6 +18,8 @@ results/tables/*
 !data/metadata/.gitkeep
 !results/benchmarks/.gitkeep
 !results/figures/.gitkeep
+!results/figures/architecture_pipeline_animated.gif
+!results/figures/architecture_pipeline_animated.mp4
 !results/logs/.gitkeep
 !results/models/.gitkeep
 !results/tables/.gitkeep

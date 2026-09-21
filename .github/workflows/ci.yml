@@ -45,19 +45,7 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Verify research paper integrity (LaTeX syntax & citations)
-        run: |
-          python -c "
-          import re
-          with open('paper/main.tex', 'r', encoding='utf-8') as f:
-              tex = f.read()
-          assert tex.count('{') == tex.count('}'), 'Unbalanced braces in paper/main.tex'
-          cites = set(re.findall(r'\\cite\{([^}]+)\}', tex))
-          all_cites = set(k.strip() for c in cites for k in c.split(','))
-          bibitems = set(re.findall(r'\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}', tex))
-          missing = all_cites - bibitems
-          assert not missing, f'Missing bibitems in main.tex: {missing}'
-          print(f'Research paper verified successfully: {len(all_cites)} citations checked.')
-          "
+        run: python scripts/verify_paper.py
 
       - name: Validate Jupyter notebooks structure
         run: python -m unittest tests/test_notebooks.py -v
