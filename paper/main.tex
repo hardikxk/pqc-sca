@@ -182,34 +182,102 @@ To overcome this, we leverage quantum-inspired Tensor Networks (TNs), specifical
 \end{equation}
 where each $A^{(k)} \in \mathbb{R}^{\chi_{k-1} \times d_k \times \chi_k}$ is an MPS core and $\chi = \max_k(\chi_k)$ is the \textit{bond dimension}. The bond dimension controls the maximum bipartite entanglement (correlation capacity) that can propagate along the tensor chain \cite{glass2020quantum}. By setting $\chi = 8$, the parameter complexity drops from exponential $\mathcal{O}(d^N)$ to linear $\mathcal{O}(N \cdot d \cdot \chi^2)$, dramatically compressing the classification head while preserving non-linear multi-share correlations.
 
-\section{Methodology and System Architecture}
+\section{Modular Pipeline Architecture}
+\label{sec:pipeline_arch}
 
-\subsection{End-to-End Pipeline Overview}
-The \textbf{MojoPQC-SCA} framework is organized as an end-to-end, reproducible pipeline spanning raw acquisition ingestion, digital signal preprocessing, neural profiling, metric computation, and quantized edge deployment.
+The \textbf{MojoPQC-SCA} framework is architected as an end-to-end, reproducible profiling ecosystem structured into three interconnected processing pipelines that span seven distinct operational stages. As illustrated in Figure~\ref{fig:pipeline_arch}, the framework decouples high-bandwidth physical trace ingestion from neural profiling and edge deployment, ensuring that memory consumption remains strictly bounded while accelerating evaluation throughput.
 
-\begin{figure}[htbp]
+\subsection{Pipeline Subsystems and Workflow Organization}
+The architecture organizes post-quantum side-channel assessment across three primary pipeline workflows:
+\begin{enumerate}
+    \item \textbf{Streaming Signal Conditioning Pipeline (Stages 1--3):} This pipeline interfaces directly with raw, multi-gigabyte acquisition repositories. By replacing monolithic in-memory array loading with generator-based chunk streaming ($B=256$), zero-phase digital low-pass FIR filtering ($N=31, f_c=0.25$), and template cross-correlation alignment ($\Delta \tau = \pm 100$), raw waveforms exhibiting severe thermal noise and clock jitter are transformed into phase-synchronized trace streams while restricting peak resident memory to $\le 111.8\text{ MB}$ ($>99.3\%$ memory reduction).
+    \item \textbf{Feature Engineering and Quantum-Inspired Profiling Pipeline (Stages 4--6):} Conditioned traces are surgically decimated around sensitive NTT butterfly execution loops ($41{,}800 \to 5{,}000$ sample points) and standardized via per-trace Z-score normalization. The salient features are ingested by our hybrid profiling network, which combines temporal 1D-CNN spatial feature extraction with a low-rank Matrix Product State (MPS) tensor network classifier head ($\chi=8$). This restricts total model complexity to $9{,}226$ trainable parameters ($4.6\%$ of the $200{,}000$-parameter budget ceiling) while structurally regularizing the classifier against low-SNR physical noise.
+    \item \textbf{Edge Deployment, Key Recovery, and Audit Pipeline (Stage 7):} The trained profiling graphs are exported to ONNX and quantized using dynamic symmetric Int8 arithmetic ($18.6\text{ KB}$ model footprint). Key candidates are evaluated via accumulated log-likelihood scores, driving Guessing Entropy monotonically to Rank $1.0$ to extract masked secret polynomial coefficients. Finally, an immutable cryptographic provenance trail (\texttt{run\_manifest.json}) records SHA-256 digests of all datasets, models, and outputs, guaranteeing end-to-end reproducibility and auditability.
+\end{enumerate}
+
+\begin{figure*}[t]
 \centering
-\begin{adjustbox}{max width=\columnwidth}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabular}{@{}c@{}}
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 1: Streaming Ingestion} \\ \footnotesize Memory-mapped HDF5 chunks ($B=256$) \cite{hdfgroup2020hdf5}}} \\
+\begin{adjustbox}{max width=\textwidth}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}ccccc@{}}
+% Panel 1: Streaming Signal Conditioning
+\begin{tabular}[t]{@{}c@{}}
+\fbox{\parbox{0.29\textwidth}{\centering \textbf{\small PIPELINE I: STREAMING PREPROCESSING}}} \\[4pt]
+\fbox{\parbox{0.29\textwidth}{\footnotesize \textbf{Stage 1: Streaming Ingestion} \\
+Direct memory-mapped HDF5 slicing \\
+Chunk batch size $B=256$, lazy generator \\
+Peak RSS $\le 111.8\text{ MB}$ ($>99.3\%$ reduction) \cite{hdfgroup2020hdf5}}} \\
 $\Downarrow$ \\
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 2: Digital FIR Filtering} \\ \footnotesize Zero-phase low-pass filter ($N=31, f_c=0.25$)}} \\
+\fbox{\parbox{0.29\textwidth}{\footnotesize \textbf{Stage 2: Digital FIR Filtering} \\
+Forward-backward zero-phase low-pass \\
+Filter order $N=31$, cutoff $f_c=0.25$ \\
+Suppresses noise without temporal phase lag}} \\
 $\Downarrow$ \\
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 3: Phase Alignment} \\ \footnotesize Template cross-correlation ($\Delta \tau = \pm 100$)}} \\
+\fbox{\parbox{0.29\textwidth}{\footnotesize \textbf{Stage 3: Phase Alignment} \\
+Template cross-correlation over window $\mathcal{W}$ \\
+Circular translation shift $\Delta\tau = \pm 100$ \\
+Eliminates clock jitter \& dummy delays}}
+\end{tabular}
+&
+\begin{tabular}[c]{@{}c@{}}
+\vspace{4.5em} \\
+\Large $\boldsymbol{\Longrightarrow}$ \\
+\footnotesize \textit{Aligned Stream} \\
+\footnotesize $[B \times 41{,}800]$
+\end{tabular}
+&
+% Panel 2: Tensor Neural Profiling
+\begin{tabular}[t]{@{}c@{}}
+\fbox{\parbox{0.31\textwidth}{\centering \textbf{\small PIPELINE II: NEURAL PROFILING}}} \\[4pt]
+\fbox{\parbox{0.31\textwidth}{\footnotesize \textbf{Stage 4: POI Butterfly Decimation} \\
+Surgical extraction of salient NTT loops \\
+Dimensionality reduction: $41{,}800 \to 5{,}000$ points \\
+Maximizes SNR, prevents gradient dispersion}} \\
 $\Downarrow$ \\
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 4: POI Decimation} \\ \footnotesize Feature reduction ($41,800 \to 5,000$ points)}} \\
+\fbox{\parbox{0.31\textwidth}{\footnotesize \textbf{Stage 5: Z-Score Normalization} \\
+Standardization: $\mathbf{t}' = (\mathbf{t} - \mu_{\mathbf{t}})/(\sigma_{\mathbf{t}} + \epsilon)$ \\
+Zero-mean, unit-variance per trace \\
+Stabilizes backpropagation gradients}} \\
 $\Downarrow$ \\
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 5: Z-Score Normalization} \\ \footnotesize Per-trace zero-mean, unit-variance scaling}} \\
+\fbox{\parbox{0.31\textwidth}{\footnotesize \textbf{Stage 6: Hybrid 1D-CNN + MPS Profiler} \\
+1D-CNN backbone (16 \& 32 filters, $k=11$) \\
+Quantum-inspired MPS tensor head ($\chi=8$) \\
+$\mathbf{9{,}226}$ total parameters ($4.6\%$ of $200\text{k}$ budget)}}
+\end{tabular}
+&
+\begin{tabular}[c]{@{}c@{}}
+\vspace{4.5em} \\
+\Large $\boldsymbol{\Longrightarrow}$ \\
+\footnotesize \textit{Candidate Logits} \\
+\footnotesize $[B \times 256]$
+\end{tabular}
+&
+% Panel 3: Edge Evaluation & Audit
+\begin{tabular}[t]{@{}c@{}}
+\fbox{\parbox{0.29\textwidth}{\centering \textbf{\small PIPELINE III: EDGE DEPLOYMENT \& AUDIT}}} \\[4pt]
+\fbox{\parbox{0.29\textwidth}{\footnotesize \textbf{Stage 7: Dynamic Int8 Quantization} \\
+ONNX export with per-tensor symmetric Int8 \\
+Model footprint: $18.6\text{ KB}$ ($73.4\%$ compression) \\
+CPU inference latency: $0.14\text{ ms/trace}$ \cite{onnxruntime2021} \\
+Throughput: $7{,}142\text{ traces/s}$ on single core}} \\
 $\Downarrow$ \\
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 6: Hybrid Neural Profiler} \\ \footnotesize 1D-CNN backbone + MPS tensor core ($\chi=8$)}} \\
+\fbox{\parbox{0.29\textwidth}{\footnotesize \textbf{Key Recovery Evaluation} \\
+Log-likelihood scoring: $\mathbf{S}_m(k) \mathrel{+}= \log P(\hat{\mathbf{y}})$ \\
+Monotonic convergence: $GE(m) \to 1.0$ \\
+Secret masked key coefficients extracted}} \\
 $\Downarrow$ \\
-\fbox{\parbox{0.92\columnwidth}{\centering \textbf{Stage 7: Edge Deployment \& Audit} \\ \footnotesize Int8 ONNX export + SHA-256 manifest \cite{onnxruntime2021}}} \\
+\fbox{\parbox{0.29\textwidth}{\footnotesize \textbf{Cryptographic Audit Trail} \\
+Strict shape \& finite-value validation \\
+SHA-256 cryptographic provenance digests \\
+Immutable \texttt{run\_manifest.json} record}}
+\end{tabular}
 \end{tabular}
 \end{adjustbox}
-\caption{Modular architecture of the MojoPQC-SCA pipeline from raw acquisition traces to quantized edge inference.}
+\caption{Comprehensive modular architecture of the MojoPQC-SCA framework across all processing pipelines. The workflow decouples execution into three interconnected subsystems spanning both columns: the memory-bounded streaming preprocessing pipeline (Stages 1--3), the salient feature engineering and quantum-inspired tensor profiling pipeline (Stages 4--6), and the edge inference, key recovery, and cryptographic audit pipeline (Stage 7). Spanning both columns, this unified multi-pipeline architecture achieves a $>99.3\%$ peak RAM reduction ($\le 111.8\text{ MB}$), trains within $4.6\%$ of the parameter budget ($9{,}226$ parameters), and drives Guessing Entropy monotonically to Rank $1.0$ on masked ML-KEM-512 microcontroller acquisitions.}
 \label{fig:pipeline_arch}
-\end{figure}
+\end{figure*}
+
+\section{Methodological Formulation and Core Components}
 
 \subsection{Streaming Ingestion and Memory-Bounded Chunking}
 Standard Python frameworks load entire datasets into RAM as monolithic arrays, precipitating out-of-memory crashes on commodity computers when scaling to $100,000$ PQC traces ($>16.7\text{ GB}$). In MojoPQC-SCA, we resolve this through a dedicated software architecture combining generator-based chunk streaming and direct memory-mapped buffer reuse:
