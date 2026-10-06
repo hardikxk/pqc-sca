@@ -15,9 +15,9 @@ def align_xcorr(traces: np.ndarray, reference: np.ndarray, max_shift: int = 500,
     if limit <= 0:
         return traces_np.copy()
 
-    if device is None:
+    if device is None or device == "auto":
         device = "cuda" if torch.cuda.is_available() else "cpu"
-    dev = torch.device(device if (device == "cuda" and torch.cuda.is_available()) else "cpu")
+    dev = torch.device("cuda" if (device == "cuda" and torch.cuda.is_available()) else "cpu")
 
     t = torch.from_numpy(traces_np).to(dev)
     ref = torch.from_numpy(reference_np).to(dev)

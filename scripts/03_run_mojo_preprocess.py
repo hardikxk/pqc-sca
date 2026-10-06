@@ -24,7 +24,7 @@ started = time.perf_counter()
 if shutil.which("mojo"):
     print("Mojo detected, but the HDF5 bridge is not enabled yet; using the reference pipeline.")
     backend = "python_reference"
-    stats = preprocess_pipeline(args.input, args.output, config)
+    stats = preprocess_pipeline(args.input, args.output, config, device=args.device)
 else:
     print("Warning: Mojo is unavailable; using the Python fallback.")
     backend = "numba_fallback"

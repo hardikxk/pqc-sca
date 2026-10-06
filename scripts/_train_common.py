@@ -34,6 +34,9 @@ def train_model(model, data_path: str, checkpoint: str, log_path: str, epochs: i
     model.to(resolved_device)
     if resolved_device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(resolved_device)
+        torch.backends.cudnn.benchmark = True
+    dev_name = torch.cuda.get_device_name(resolved_device) if resolved_device.type == "cuda" else "CPU"
+    print(f"Training on device: {resolved_device} ({dev_name})")
     full = HDF5TraceDataset(data_path, "profiling")
     indices = np.random.default_rng(seed).permutation(len(full))
     split = max(1, int(len(indices) * (1 - validation_fraction)))
