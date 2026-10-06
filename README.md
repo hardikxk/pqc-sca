@@ -4,7 +4,7 @@
 [![PyTorch 2.6+](https://img.shields.io/badge/PyTorch-2.6+-ee4c2c.svg)](https://pytorch.org/)
 [![ONNX Runtime](https://img.shields.io/badge/ONNX_Runtime-1.19+-005CED.svg)](https://onnxruntime.ai/)
 [![NIST Standard](https://img.shields.io/badge/NIST_PQC-FIPS_203_(ML--KEM)-darkgreen.svg)](https://csrc.nist.gov/pubs/fips/203/final)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hardikxk/pqc-sca/blob/main/notebooks/colab_train.ipynb)
 
 > **MojoPQC-SCA (NeuralSCA)** is a lightweight, end-to-end deep learning side-channel analysis (DL-SCA) profiling pipeline engineered to evaluate the physical hardware security of **NIST FIPS 203 (ML-KEM / CRYSTALS-Kyber)** on embedded microcontrollers.
@@ -351,4 +351,4 @@ If you use MojoPQC-SCA / NeuralSCA in your research, please cite our paper:
 ---
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [GNU General Public License v3.0 (GPL-3.0)](LICENSE).

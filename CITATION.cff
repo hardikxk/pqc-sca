@@ -5,7 +5,7 @@ abstract: "CPU-first research pipeline for synthetic and hardware-derived masked
 version: 0.1.0
 date-released: 2026-08-28
 authors:
-  - family-names: Researcher
-    given-names: MojoPQC-SCA
-repository-code: https://github.com/REPLACE_WITH_YOUR_ACCOUNT/MojoPQC-SCA
-license: MIT
+  - family-names: Kumar
+    given-names: Hardik
+repository-code: https://github.com/hardikxk/pqc-sca
+license: GPL-3.0-only
