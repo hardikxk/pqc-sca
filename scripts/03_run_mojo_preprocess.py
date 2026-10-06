@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description="Run Mojo preprocessing or its port
 parser.add_argument("--config", default="config/default.yaml")
 parser.add_argument("--input", default="data/raw/synthetic_pqc.h5")
 parser.add_argument("--output", default="data/processed/mojo_processed.h5")
+parser.add_argument("--device", default="cpu", help="Compute device (accepted for compatibility)")
 args = parser.parse_args()
 ensure_output_dirs()
 config = load_config(args.config)

@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser(description="Run streaming Python preprocessing
 parser.add_argument("--config", default="config/default.yaml")
 parser.add_argument("--input", default="data/raw/synthetic_pqc.h5")
 parser.add_argument("--output", default="data/processed/python_processed.h5")
+parser.add_argument("--device", default="cpu", help="Compute device (accepted for compatibility)")
 args = parser.parse_args()
 ensure_output_dirs()
 stats = preprocess_pipeline(args.input, args.output, load_config(args.config))
