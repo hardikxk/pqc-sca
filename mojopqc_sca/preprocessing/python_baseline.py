@@ -20,7 +20,7 @@ def downsample_traces(traces: np.ndarray, target_len: int = 5000) -> np.ndarray:
     return np.asarray(traces)[:, indices]
 
 
-def preprocess_pipeline(input_path: str | Path, output_path: str | Path, config: dict[str, Any]) -> dict[str, float]:
+def preprocess_pipeline(input_path: str | Path, output_path: str | Path, config: dict[str, Any], device: str = "auto") -> dict[str, float]:
     started = time.perf_counter()
     memory = PeakMemoryMonitor().start()
     validate_hdf5_layout(input_path)
@@ -38,7 +38,7 @@ def preprocess_pipeline(input_path: str | Path, output_path: str | Path, config:
                 stop = min(source_traces.shape[0], start + chunk_size)
                 batch = normalize_traces(source_traces[start:stop])
                 batch = fir_filter(batch, pcfg["filter_kernel_size"])
-                batch = align_xcorr(batch, reference, pcfg["max_shift"])
+                batch = align_xcorr(batch, reference, pcfg["max_shift"], device=device)
                 output_traces[start:stop] = downsample_traces(batch, pcfg["target_length"])
         if "metadata/config" in source:
             target.create_dataset("metadata/config", data=source["metadata/config"][()])
